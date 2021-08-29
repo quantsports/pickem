@@ -30,8 +30,8 @@ class game:
         self.qb2 = var12
 
 # Generate file path for csv with elo data
-cwd = os.getcwd()
-csvPath = cwd + '/nfl_elo_latest.csv'
+scriptDir = os.path.dirname(__file__)
+csvPath = scriptDir + '/nfl_elo_latest.csv'
 
 allGames = []
 
