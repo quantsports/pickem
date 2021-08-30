@@ -111,9 +111,21 @@ allWeeks = {
 }
 # endregion
 
+# region week selection
 #TODO Figure out week selection and how you want this to work
-selectedWeek = 'week3'
-
+def getCurrentWeek():
+    today = datetime.datetime.now().date()
+    #today = datetime.date(2020, 9, 23)
+    for k,v in allWeeks.items():
+        if today in v:
+            return k
+    print('There are no NFL games this week. Default selection: week1')
+    return 'week1'
+        
+#selectedWeek = getCurrentWeek()
+selectedWeek = 'week3' #Over ride for testing
+# endregion
+    
 games = []
 for d in allWeeks[selectedWeek]:
     for g in allGames:
