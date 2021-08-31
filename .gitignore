@@ -1,2 +1,4 @@
 *.csv
 *.~lock*
+*__pycache__*
+*.pyc
