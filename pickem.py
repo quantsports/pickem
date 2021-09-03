@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-from modules.weeks import calcWeeks, getPrevWeek, getThisWeek
+from modules.weeks import getAllWeeks, getPrevWeek, getThisWeek
 from modules.games import getGames
 
 # ELO variables
-hfa = 55    # Base home field advantage
+hfa = 33    # Base home field advantage
 ra = 25     # Additional ELO advantage if coming off bye week
 pa = 1.2    # Playoff ELO adjustment factor
 
@@ -11,14 +11,18 @@ pa = 1.2    # Playoff ELO adjustment factor
 # Assumptions
 season = 2020
 selectedWeek = 'week9'
-allWeeks = calcWeeks(season)
+allWeeks = getAllWeeks(season)
 prevWeek = getPrevWeek(allWeeks, selectedWeek)
 games = getGames(allWeeks, selectedWeek, prevWeek)
 
-#TODO Create function to calculate spread
-#TODO Itterate through games and calculate spread with ELO variables
-
-# Output is currently just for testing
-print ('{:<4} {:<3} {:<10} {:<5} {:<5}'.format('Game', '', '', 't2-ob', 't1-ob'))
+ranked = []
 for g in games:
-    print ('{:<4} {:<3} {:<10} {:<5} {:<5}'.format(g.team2, 'at', g.team1, g.team2_offbye, g.team1_offbye))
+    g.calculateSpread(hfa, ra, pa, selectedWeek)
+    ranked.append(g)
+ranked.sort(key=lambda x: x.spread, reverse=True)
+    
+print ('{:<3} {:<4} {:<5} {:<5} {:<5}'.format('pick', '', '', 'pts', 'spread'))
+points = len(ranked)
+for g in ranked:
+    print ('{:<3} {:<4} {:<6} {:<5} {:<5}'.format(g.pick, 'over', g.loser, points, "-" + str(round(g.spread * 2) / 2)))
+    points -= 1

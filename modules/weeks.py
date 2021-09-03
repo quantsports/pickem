@@ -1,6 +1,6 @@
 import calendar, datetime
 
-def calcWeeks(season):
+def getAllWeeks(season):
     # Find the date of Labor Day as it corresponds to the start of the NFL season
     cal = calendar.Calendar(0).monthdatescalendar(int(season), 9)
     if cal[0][0].month == 9:
