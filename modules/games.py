@@ -107,3 +107,10 @@ def getGames(allWeeks, selectedWeek, prevWeek):
                     g.team2_offbye = False
 
     return games
+
+def formatSpread(spread):
+    fSpread = round(spread * 2) / 2
+    fSpread = int(fSpread) if float(fSpread).is_integer() else float(fSpread)
+    fSpread = '-' + str(fSpread)
+    fSpread = 'PK' if fSpread == '-0' else fSpread
+    return fSpread

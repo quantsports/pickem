@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from modules.weeks import getAllWeeks, getPrevWeek, getThisSeason, getThisWeek
-from modules.games import getGames
+from modules.games import formatSpread, getGames
 from optparse import OptionParser
 import sys
 
@@ -17,11 +17,11 @@ parser.add_option("-w", "--week",
                     wildcard, divisonal, conference, championship")
 parser.add_option("-s", "--season",
                     dest = "season",
-                    help = "Select a specific season")
+                    help = "Select a specific season.")
 parser.add_option("-n", "--numGames",
                     dest = "numGames",
                     type = "int",
-                    help = "Select number of games to be ranked as an int, must be less than")
+                    help = "Select number of games to be ranked.")
 (options, args) = parser.parse_args()
 
 # Configure season, weeks, and games
@@ -41,14 +41,15 @@ for g in games:
 games.sort(key=lambda x: x.spread, reverse=True)
 # If numGames option used remove items from games list
 if options.numGames:
-    diff = len(games) - options.numGames
-    games = games[:-diff]
+    if options.numGames < len(games):
+        diff = len(games) - options.numGames
+        games = games[:-diff]
 
 # Print output
 print(selectedWeek + " " + str(season) + "\n----------")
 print ('{:<3} {:<4} {:<5} {:<5} {:<5}'.format('pick', '', '', 'pts', 'spread'))
 points = len(games)
 for g in games:
-    print ('{:<3} {:<4} {:<6} {:<5} {:<5}'.format(g.pick, 'over', g.loser, points, "-" + str(round(g.spread * 2) / 2)))
+    print ('{:<3} {:<4} {:<6} {:<5} {:<5}'.format(g.pick, 'over', g.loser, points, formatSpread(g.spread)))
     points -= 1
 print("")
