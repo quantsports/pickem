@@ -17,8 +17,8 @@ class game:
     qb2_abj = 0         #var14
     qbelo_prob1 = 0     #var15
     qbelo_prob2 = 0     #var16
-    team1_offbye = ''
-    team2_offbye = ''
+    team1_offbye = False
+    team2_offbye = False
     spread = 0
     pick = ''
     loser = ''
@@ -90,19 +90,20 @@ def getGames(allWeeks, selectedWeek, prevWeek):
             if g.date == d:
                 games.append(g)
 
-    for d in allWeeks[prevWeek]:
-        for g in allGames:
-            if g.date == d:
-                prevGames.append(g)
-    
-    # If team is discovered in previous week's lineup, offbye is set to False
-    for g in games:
-        g.team1_offbye = True
-        g.team2_offbye = True
-        for p in prevGames:
-            if g.team1 in (p.team1, p.team2):
-                g.team1_offbye = False
-            if g.team2 in (p.team1, p.team2):
-                g.team2_offbye = False
+    if selectedWeek != 'week1':
+        for d in allWeeks[prevWeek]:
+            for g in allGames:
+                if g.date == d:
+                    prevGames.append(g)
+        
+        # If team is discovered in previous week's lineup, offbye is set to False
+        for g in games:
+            g.team1_offbye = True
+            g.team2_offbye = True
+            for p in prevGames:
+                if g.team1 in (p.team1, p.team2):
+                    g.team1_offbye = False
+                if g.team2 in (p.team1, p.team2):
+                    g.team2_offbye = False
 
     return games

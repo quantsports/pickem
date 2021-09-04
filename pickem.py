@@ -10,7 +10,7 @@ pa = 1.2    # Playoff ELO adjustment factor
 #TODO Determine how this should work. Command line args? Something else?
 # Assumptions
 season = 2020
-selectedWeek = 'week9'
+selectedWeek = 'week12'
 allWeeks = getAllWeeks(season)
 prevWeek = getPrevWeek(allWeeks, selectedWeek)
 games = getGames(allWeeks, selectedWeek, prevWeek)
