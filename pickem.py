@@ -1,28 +1,54 @@
 #!/usr/bin/python3
-from modules.weeks import getAllWeeks, getPrevWeek, getThisWeek
+from modules.weeks import getAllWeeks, getPrevWeek, getThisSeason, getThisWeek
 from modules.games import getGames
+from optparse import OptionParser
+import sys
 
 # ELO variables
-hfa = 33    # Base home field advantage
+hfa = 55    # Base home field advantage
 ra = 25     # Additional ELO advantage if coming off bye week
 pa = 1.2    # Playoff ELO adjustment factor
 
-#TODO Determine how this should work. Command line args? Something else?
-# Assumptions
-season = 2020
-selectedWeek = 'week12'
+# Command line options
+parser = OptionParser()
+parser.add_option("-w", "--week",
+                    dest = "week",
+                    help = "Select a specific week.\nOptions: week1, week2, etc, \
+                    wildcard, divisonal, conference, championship")
+parser.add_option("-s", "--season",
+                    dest = "season",
+                    help = "Select a specific season")
+parser.add_option("-n", "--numGames",
+                    dest = "numGames",
+                    type = "int",
+                    help = "Select number of games to be ranked as an int, must be less than")
+(options, args) = parser.parse_args()
+
+# Configure season, weeks, and games
+season = options.season if options.season else getThisSeason()
 allWeeks = getAllWeeks(season)
+selectedWeek = str(options.week) if options.week else getThisWeek(allWeeks)
 prevWeek = getPrevWeek(allWeeks, selectedWeek)
 games = getGames(allWeeks, selectedWeek, prevWeek)
+# If there is no data available for the selected week inform the user and then exit
+if len(games) < 1:
+    print("No data found for " + selectedWeek + " of the " + str(season)+ " season.")
+    sys.exit()
 
-ranked = []
+# Calculate spread of each game then sort games list by spread
 for g in games:
     g.calculateSpread(hfa, ra, pa, selectedWeek)
-    ranked.append(g)
-ranked.sort(key=lambda x: x.spread, reverse=True)
-    
+games.sort(key=lambda x: x.spread, reverse=True)
+# If numGames option used remove items from games list
+if options.numGames:
+    diff = len(games) - options.numGames
+    games = games[:-diff]
+
+# Print output
+print(selectedWeek + " " + str(season) + "\n----------")
 print ('{:<3} {:<4} {:<5} {:<5} {:<5}'.format('pick', '', '', 'pts', 'spread'))
-points = len(ranked)
-for g in ranked:
+points = len(games)
+for g in games:
     print ('{:<3} {:<4} {:<6} {:<5} {:<5}'.format(g.pick, 'over', g.loser, points, "-" + str(round(g.spread * 2) / 2)))
     points -= 1
+print("")

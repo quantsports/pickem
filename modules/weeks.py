@@ -34,13 +34,15 @@ def getAllWeeks(season):
         if w not in weeksCal:
             weeksCal.append(w)
 
-    index = 1 # We are looking for the NFL week after Labor Day, so index starts at one
+    # First week of list is Tue-Mon week including Labor Day, season starts the week after this week (week0)
+    index = 1
     for week in weeksCal:
         if laborDay in week:
             break
         else:
             index += 1
 
+    # This data set is currently only correct for 2021 season with addition of 17th game
     allWeeks = {
         'week1':weeksCal[index],
         'week2':weeksCal[index+1],
@@ -68,12 +70,17 @@ def getAllWeeks(season):
 
     return allWeeks
 
+def getThisSeason():
+    today = datetime.datetime.now()
+    season = today.year if today.month in range(3,12) else today.year - 1
+    return season     
+
 def getThisWeek(allWeeks):
     today = datetime.datetime.now().date()
     for k,v in allWeeks.items():
         if today in v:
             return k
-    print('There are no NFL games this week. Default selection: week1')
+    print('There are no NFL games this week. Defaulting to week1.')
     return 'week1'
 
 def getPrevWeek(allWeeks, selectedWeek):
