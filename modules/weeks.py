@@ -1,29 +1,33 @@
 import calendar, datetime
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 def getAllWeeks(season):
-    # Find the date of Labor Day as it corresponds to the start of the NFL season
+    # Find the date of Labor Day as it corresponds to the start of the season
     cal = calendar.Calendar(0).monthdatescalendar(int(season), 9)
     if cal[0][0].month == 9:
         laborDay = cal[0][0]
     else:
         laborDay = cal[1][0]
 
-    # NFL weeks start on Tuesday and end on Monday
-    nflCal = calendar.Calendar(1)
+    # game weeks start on Wed and end on Tue (something of an assumption)
+    # usually last game is Monday though Tuesday is ocassionally (rarely) used to reschedule games
+    # if this assumption is wrong for some one-off scheduling reason then this will not work
+    gameCal = calendar.Calendar(2)
     weeksCalWithDups = []
 
     # Create list of weeks from September through February
     i = 1
     m = 9
     while i <= 4:
-        for w in nflCal.monthdatescalendar(int(season), m):
+        for w in gameCal.monthdatescalendar(int(season), m):
             weeksCalWithDups.append(w)
         i += 1
         m += 1
 
     m = 1
     while i <= 6:
-        for w in nflCal.monthdatescalendar(int(season)+1, m):
+        for w in gameCal.monthdatescalendar(int(season)+1, m):
             weeksCalWithDups.append(w)
         i += 1
         m += 1
@@ -34,7 +38,7 @@ def getAllWeeks(season):
         if w not in weeksCal:
             weeksCal.append(w)
 
-    # First week of list is Tue-Mon week including Labor Day, season starts the week after this week (week0)
+    # First week of list is Wed-Tue week including Labor Day, season starts the week after this week (week0)
     index = 1
     for week in weeksCal:
         if laborDay in week:
@@ -42,7 +46,7 @@ def getAllWeeks(season):
         else:
             index += 1
 
-    # This data set is currently only correct for 2021 season with addition of 17th game
+    # This will not work for games prior to the 1978 16 game schedule
     allWeeks = {
         'week1':weeksCal[index],
         'week2':weeksCal[index+1],
@@ -62,19 +66,23 @@ def getAllWeeks(season):
         'week16':weeksCal[index+15],
         'week17':weeksCal[index+16],
         'week18':weeksCal[index+17],
-        'wildcard':weeksCal[index+18],
-        'divisional':weeksCal[index+19],
-        'conference':weeksCal[index+20],
-        'championship':weeksCal[index+22]
+        'wildcard':weeksCal[index+18] if int(season) >= 2021 else weeksCal[index+17],
+        'divisional':weeksCal[index+19] if int(season) >= 2021 else weeksCal[index+18],
+        'conference':weeksCal[index+20] if int(season) >= 2021 else weeksCal[index+19],
+        'championship':weeksCal[index+22] if int(season) >= 2021 else weeksCal[index+21]
     }
 
     return allWeeks
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 def getThisSeason():
     today = datetime.datetime.now()
     season = today.year if today.month in range(3,12) else today.year - 1
     return season     
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 def getThisWeek(allWeeks):
     today = datetime.datetime.now().date()
     for k,v in allWeeks.items():
@@ -83,6 +91,8 @@ def getThisWeek(allWeeks):
     print('There are no NFL games this week. Defaulting to week1.')
     return 'week1'
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 def getPrevWeek(allWeeks, selectedWeek):
     backsev = allWeeks[selectedWeek][0] - datetime.timedelta(7)
     for k,v in allWeeks.items():

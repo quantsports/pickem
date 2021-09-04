@@ -1,5 +1,7 @@
 import csv, datetime, os
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 class game:
     date = ''           #var1
     season = ''         #var2
@@ -7,8 +9,8 @@ class game:
     playoff = ''        #var4
     team1 = ''          #var5
     team2 = ''          #var6
-    elo1_pre = 0        #var7
-    elo2_pre = 0        #var8
+    elo1_pre = 0        #var7 for future use
+    elo2_pre = 0        #var8 for future use
     qbelo1_pre = 0      #var9
     qbelo2_pre = 0      #var10
     qb1 = ''            #var11
@@ -22,6 +24,8 @@ class game:
     spread = 0
     pick = ''
     loser = ''
+    team1_travdis = 0   # for future use
+    team2_travdis = 0   # for future use
 
     def __init__(self, var1, var2, var3, var4, var5, var6, var7, var8, var9, var10, var11, var12, var13, var14, var15, var16):
         self.date = datetime.datetime.strptime(var1, '%Y-%m-%d').date()
@@ -56,6 +60,7 @@ class game:
         self.qbelo2_pre += self.qb2_adj
 
         #TODO add logic for playoff 1.2 x adjustment
+        #TODO integrate travel distance to the calculation
 
         # Determine the pick
         if self.qbelo1_pre > self.qbelo2_pre:
@@ -70,6 +75,8 @@ class game:
         # Determine the spread as a float
         self.spread = abs(self.qbelo2_pre - self.qbelo1_pre) / 25
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Import all games from CSV
 scriptDir = os.path.dirname(__file__)
 csvPath = os.path.abspath(os.path.join(scriptDir, '..', 'data', 'nfl_elo_latest.csv'))
@@ -79,6 +86,8 @@ with open(csvPath, 'r') as eloCsv:
     for row in csv.reader(eloCsv):
         allGames.append(game(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[12],row[13],row[14],row[15],row[18],row[19],row[20],row[21]))
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Select games by matching their date to weeks
 # Also look back at previous week to determine if team is coming off a bye
 def getGames(allWeeks, selectedWeek, prevWeek):
@@ -90,24 +99,26 @@ def getGames(allWeeks, selectedWeek, prevWeek):
             if g.date == d:
                 games.append(g)
 
-    if selectedWeek != 'week1':
+    if selectedWeek != 'week1' and selectedWeek != 'championship':
         for d in allWeeks[prevWeek]:
             for g in allGames:
                 if g.date == d:
                     prevGames.append(g)
         
-        # If team is discovered in previous week's lineup, offbye is set to False
-        for g in games:
-            g.team1_offbye = True
-            g.team2_offbye = True
-            for p in prevGames:
-                if g.team1 in (p.team1, p.team2):
-                    g.team1_offbye = False
-                if g.team2 in (p.team1, p.team2):
-                    g.team2_offbye = False
+    # If team is discovered in previous week's lineup, offbye is set to False
+    for g in games:
+        g.team1_offbye = True
+        g.team2_offbye = True
+        for p in prevGames:
+            if g.team1 in (p.team1, p.team2):
+                g.team1_offbye = False
+            if g.team2 in (p.team1, p.team2):
+                g.team2_offbye = False
 
     return games
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 def formatSpread(spread):
     fSpread = round(spread * 2) / 2
     fSpread = int(fSpread) if float(fSpread).is_integer() else float(fSpread)
