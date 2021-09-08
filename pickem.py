@@ -4,11 +4,8 @@ from modules.games import getGames
 from optparse import OptionParser
 import sys
 
-# ELO variables
-hfa = 65    # Base home field advantage
-ra = 25     # Additional ELO advantage if coming off bye week
-pa = 1.2    # Playoff ELO adjustment factor
-
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Command line options
 parser = OptionParser()
 parser.add_option("-w", "--week",
@@ -35,7 +32,9 @@ if len(games) < 1:
     print("No data found for " + selectedWeek + " of the " + str(season)+ " season.")
     sys.exit()
 
-# Calculate spread of each game then sort games list by spread
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
+# Calculate spread of each game then sort games list by highest win probability
 for g in games:
     g.makePick(selectedWeek)
 games.sort(key=lambda x: x.pickprob, reverse=True)
@@ -45,6 +44,8 @@ if options.numGames:
         diff = len(games) - options.numGames
         games = games[:-diff]
 
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Print output
 print(selectedWeek + " " + str(season) + "\n----------")
 print ('{:<3} {:<4} {:<5} {:<5} {:<5}'.format('pick', '', '', 'pts', 'prob'))
