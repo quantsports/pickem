@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 from modules.weeks import getAllWeeks, getPrevWeek, getThisSeason, getThisWeek
-from modules.games import formatSpread, getGames
+from modules.games import getGames
 from optparse import OptionParser
 import sys
 
 # ELO variables
-hfa = 55    # Base home field advantage
+hfa = 65    # Base home field advantage
 ra = 25     # Additional ELO advantage if coming off bye week
 pa = 1.2    # Playoff ELO adjustment factor
 
@@ -37,8 +37,8 @@ if len(games) < 1:
 
 # Calculate spread of each game then sort games list by spread
 for g in games:
-    g.calculateSpread(hfa, ra, pa, selectedWeek)
-games.sort(key=lambda x: x.spread, reverse=True)
+    g.makePick(selectedWeek)
+games.sort(key=lambda x: x.pickprob, reverse=True)
 # If numGames option used remove items from games list
 if options.numGames:
     if options.numGames < len(games):
@@ -47,9 +47,12 @@ if options.numGames:
 
 # Print output
 print(selectedWeek + " " + str(season) + "\n----------")
-print ('{:<3} {:<4} {:<5} {:<5} {:<5}'.format('pick', '', '', 'pts', 'spread'))
+print ('{:<3} {:<4} {:<5} {:<5} {:<5}'.format('pick', '', '', 'pts', 'prob'))
 points = len(games)
 for g in games:
-    print ('{:<3} {:<4} {:<6} {:<5} {:<5}'.format(g.pick, 'over', g.loser, points, formatSpread(g.spread)))
+    if g.pickprob != 50:
+        print ('{:<3} {:<4} {:<6} {:<5} {:<5}'.format(g.pick, 'over', g.loser, points, str(round(g.pickprob)) + "%"))
+    else:
+        print ('{:<3} {:<4} {:<6} {:<5} {:<5}'.format(g.pick, ' or ', g.loser, points, "PK"))
     points -= 1
 print("")
