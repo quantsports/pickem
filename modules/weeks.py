@@ -78,7 +78,7 @@ def getAllWeeks(season):
 #---------------------------------------------------------------------
 def getThisSeason():
     today = datetime.datetime.now()
-    season = today.year if today.month in range(3,12) else today.year - 1
+    season = today.year if today.month in range(3,13) else today.year - 1
     return season     
 
 #---------------------------------------------------------------------
