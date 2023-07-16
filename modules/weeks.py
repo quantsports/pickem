@@ -46,7 +46,7 @@ def getAllWeeks(season):
         else:
             index += 1
 
-    # This will not work for games prior to the 1978 16 game schedule
+    # This will not work with historic data only accounts for most recent 18 game schedule
     allWeeks = {
         'week1':weeksCal[index],
         'week2':weeksCal[index+1],
@@ -90,12 +90,3 @@ def getThisWeek(allWeeks):
             return k
     print('There are no NFL games this week. Defaulting to week1.')
     return 'week1'
-
-#---------------------------------------------------------------------
-#---------------------------------------------------------------------
-def getPrevWeek(allWeeks, selectedWeek):
-    backsev = allWeeks[selectedWeek][0] - datetime.timedelta(7)
-    for k,v in allWeeks.items():
-        if backsev in v:
-            return k
-    

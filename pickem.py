@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from modules.weeks import getAllWeeks, getPrevWeek, getThisSeason, getThisWeek
+from modules.weeks import getAllWeeks, getThisSeason, getThisWeek
 from modules.games import getGames
 from optparse import OptionParser
 import sys
@@ -19,14 +19,17 @@ parser.add_option("-n", "--numGames",
                     dest = "numGames",
                     type = "int",
                     help = "Select number of games to be ranked.")
+parser.add_option("-e", "--elo",
+                    dest = "elo",
+                    help = "Select 'classic' or 'qb' elo.")
 (options, args) = parser.parse_args()
 
 # Configure season, weeks, and games
 season = options.season if options.season else getThisSeason()
 allWeeks = getAllWeeks(season)
 selectedWeek = str(options.week) if options.week else getThisWeek(allWeeks)
-prevWeek = getPrevWeek(allWeeks, selectedWeek)
-games = getGames(allWeeks, selectedWeek, prevWeek)
+eloType = options.elo if options.elo else "qb"
+games = getGames(allWeeks, selectedWeek)
 # If there is no data available for the selected week inform the user and then exit
 if len(games) < 1:
     print("No data found for " + selectedWeek + " of the " + str(season)+ " season.")
@@ -36,7 +39,8 @@ if len(games) < 1:
 #---------------------------------------------------------------------
 # Calculate spread of each game then sort games list by highest win probability
 for g in games:
-    g.makePick(selectedWeek)
+    g.makePick(selectedWeek,eloType)
+
 games.sort(key=lambda x: x.pickprob, reverse=True)
 # If numGames option used remove items from games list
 if options.numGames:
