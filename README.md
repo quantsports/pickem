@@ -15,3 +15,12 @@ This project uses the [nfl-elo data set from FiveThirtyEight](https://github.com
     │   games.py
     │   weeks.py
 ```
+
+The script can be run with several optional parameters. Default behavior and the parameters are described below.
+### Default behavior
+By default the script will check the current date and pull relevant info for the current NFL week. The NFL week is assumed to be Wed - Tue. The script uses the Quarterback adjusted Elo forecast by default.
+### Optional parameters
+| Parameter           | Description       |
+|---------------------|-------------------|
+|`-w`, `--week`     |Enter an NFL week. Format as `week1`, `week2`, etc. For playoffs you can use `wildcard`, `divisional`, `conference`, or `championship`. For example, you could use `python3 .\pickem.py -w week3` to run the script for week 3 of the current NFL season.|
+|
