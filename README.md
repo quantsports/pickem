@@ -22,7 +22,7 @@ By default the script will check the current date and pull relevant info for the
 ## Optional parameters
 | Parameter           | Description       |
 |---------------------|-------------------|
-|`-w`, `--week`     |Select an NFL week. Format as `week1`, `week2`, etc. For playoffs you can use `wildcard`, `divisional`, `conference`, or `championship`. For example, you could use `python3 .\pickem.py -w week3` to run the script for week 3 of the current NFL season.|
-|`-s`, `--season`     |Select an NFL season. Format as `2022`, `2023`, etc.|
-|`-n`,`--numGames`    |Select the number of games to be ranked. For example, you could use `python3 .\pickem.py -n 5` to return only the top five ranked games. Assigned point values will be changed accordingly.|
-|`-e`,`--elo`         |Select Elo rating type to be used. Valid options are `traditional` and `qb` for Quarterback adjusted Elo. See the 538 [How Our NFL Predicitions Work](https://fivethirtyeight.com/methodology/how-our-nfl-predictions-work/) article for an explanation of Elo.|
+|`-w`<br/>`--week`     |Select an NFL week. Format as `week1`, `week2`, etc. For playoffs you can use `wildcard`, `divisional`, `conference`, or `championship`. For example, you could use `python3 .\pickem.py -w week3` to run the script for week 3 of the current NFL season.|
+|`-s`<br/>`--season`     |Select an NFL season. Format as `2022`, `2023`, etc.|
+|`-n`<br/>`--numGames`    |Select the number of games to be ranked. For example, you could use `python3 .\pickem.py -n 5` to return only the top five ranked games. Assigned point values will be changed accordingly.|
+|`-e`<br/>`--elo`         |Select Elo rating type to be used. Valid options are `traditional` and `qb` for Quarterback adjusted Elo. See the 538 [How Our NFL Predicitions Work](https://fivethirtyeight.com/methodology/how-our-nfl-predictions-work/) article for an explanation of Elo.|
