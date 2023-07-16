@@ -21,7 +21,7 @@ parser.add_option("-n", "--numGames",
                     help = "Select number of games to be ranked.")
 parser.add_option("-e", "--elo",
                     dest = "elo",
-                    help = "Select 'classic' or 'qb' elo.")
+                    help = "Select 'traditional' or 'qb' elo.")
 (options, args) = parser.parse_args()
 
 # Configure season, weeks, and games

@@ -44,7 +44,7 @@ class game:
                 self.pick = self.team1 # if PK choose the home team
                 self.loser = self.team2
                 self.pickprob = 50
-        elif elo == 'classic':
+        elif elo == 'traditional':
                 if self.elo_prob1 > self.elo_prob2:
                     self.pick = self.team1
                     self.loser = self.team2
